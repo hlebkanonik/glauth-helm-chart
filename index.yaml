@@ -1,2 +1,21 @@
 apiVersion: v1
-entries: {}
+entries:
+  glauth:
+  - apiVersion: v2
+    appVersion: 2.3.2
+    created: "2025-08-06T15:33:01.905114168Z"
+    description: A Helm chart for GLAuth LDAP server
+    digest: f8ed2428b6203057171c38984eeea1bf8eacba854a317e76872976f37107f011
+    home: https://github.com/hlebkanonik/glauth-helm-chart
+    keywords:
+    - ldap
+    - authentication
+    - directory
+    name: glauth
+    sources:
+    - https://github.com/hlebkanonik/glauth-helm-chart
+    type: application
+    urls:
+    - https://github.com/hlebkanonik/glauth-helm-chart/releases/download/glauth-25.8.6/glauth-25.8.6.tgz
+    version: 25.8.6
+generated: "2025-08-06T15:33:01.905128865Z"
