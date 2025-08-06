@@ -1,6 +1,6 @@
 # GLAuth Helm Chart
 
-A lightweight Helm chart for deploying [GLAuth](https://github.com/glauth/glauth) LDAP server on Kubernetes.
+A lightweight Helm chart for deploying GLAuth LDAP server on Kubernetes.
 
 ## Overview
 
