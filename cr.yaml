@@ -1,0 +1,29 @@
+# Chart Releaser configuration
+# https://github.com/helm/chart-releaser
+
+# Chart directories to process
+charts-dir: glauth/
+
+# GitHub Pages branch
+pages-branch: gh-pages
+
+# Release name template
+release-name-template: "{{ .Name }}-{{ .Version }}"
+
+# Chart repository URL (will be set automatically)
+# chart-repo-url: https://your-username.github.io/glauth-helm-chart
+
+# Package charts
+package:
+  # Package charts to .tgz files
+  enabled: true
+
+# Release charts
+release:
+  # Create GitHub releases
+  enabled: true
+
+# Update index
+update:
+  # Update index.yaml
+  enabled: true 

@@ -423,6 +423,101 @@ The Helm chart creates the following Kubernetes resources:
 4. Test with `helm lint` and `helm template`
 5. Submit a pull request
 
+## CI/CD
+
+This repository includes automated linting for pull requests using the official [helm/chart-testing-action](https://github.com/helm/chart-testing-action):
+
+### Automated Checks
+
+- **Chart Linting**: Validates chart syntax and structure using chart-testing
+- **Template Validation**: Ensures all templates render correctly
+- **Configuration Validation**: Tests chart with different values files
+
+### Local Testing
+
+Before submitting a pull request, run these commands locally:
+
+```bash
+# Lint the chart
+helm lint glauth/
+
+# Validate templates
+helm template glauth/ > /dev/null
+helm template glauth/ -f values-reportportal.yaml > /dev/null
+
+# Test installation (requires kind or minikube)
+helm install test-glauth glauth/ --dry-run
+
+# Optional: Bump version to current date (CI/CD does this automatically)
+./scripts/bump-version.sh
+```
+
+### Workflow Files
+
+- `.github/workflows/lint-chart.yml`: Chart linting workflow using chart-testing-action
+- `.github/workflows/release-chart.yml`: Chart release workflow using chart-releaser-action
+- `ct.yaml`: Chart testing configuration
+- `cr.yaml`: Chart releaser configuration
+- `.github/lintconf.yaml`: Lint rules configuration
+
+### Chart Testing Features
+
+The CI/CD pipeline uses [chart-testing](https://github.com/helm/chart-testing) which provides:
+- **YAML Linting**: Validates YAML syntax and structure
+- **Helm Linting**: Checks chart syntax and best practices
+- **Template Validation**: Ensures all templates render correctly
+
+## Releases
+
+This repository automatically releases the Helm chart when changes are merged to the main branch using [helm/chart-releaser-action](https://github.com/helm/chart-releaser-action).
+
+### Automatic Release Process
+
+1. **Version Management**: Chart version automatically updated to current date format `yy.mm.dd` (e.g., `25.01.15` for January 15, 2025)
+2. **Trigger**: Release is triggered on push to `main` or `master` branch
+3. **Version Bump**: Chart version is automatically bumped to current date
+4. **Packaging**: Chart is packaged into `.tgz` files
+5. **GitHub Release**: Creates a GitHub release with the chart artifacts
+6. **GitHub Pages**: Updates the Helm repository index on GitHub Pages
+
+### Version Management
+
+The chart version follows the date format `yy.mm.dd` and is automatically managed:
+
+```bash
+# Manual version bump (optional - CI/CD does this automatically)
+./scripts/bump-version.sh
+
+# Example versions:
+# 25.01.15 - January 15, 2025
+# 25.02.01 - February 1, 2025
+# 25.12.31 - December 31, 2025
+```
+
+**Note**: The CI/CD pipeline automatically bumps the version to the current date before each release, so manual version bumping is optional.
+
+### Installing the Chart
+
+Once released, you can install the chart using:
+
+```bash
+# Add the Helm repository
+helm repo add glauth https://your-username.github.io/glauth-helm-chart
+
+# Update repository
+helm repo update
+
+# Install the chart
+helm install my-glauth glauth/glauth
+```
+
+### Release Configuration
+
+- **Chart Directory**: `glauth/`
+- **GitHub Pages Branch**: `gh-pages`
+- **Release Template**: `{{ .Name }}-{{ .Version }}`
+- **Configuration File**: `cr.yaml`
+
 ## License
 
 This project is licensed under the same license as GLAuth.
