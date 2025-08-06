@@ -36,27 +36,21 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  # On-premises: Use NodePort for external access
+  type: NodePort
   ldapPort: 3893
   apiPort: 5555
-
-ingress:
-  enabled: false
-  className: ""
-  annotations:
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-  hosts:
-    - host: glauth.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: glauth-tls
-  #    hosts:
-  #      - glauth.local
+  # Custom NodePorts to avoid conflicts with other services
+  nodePorts:
+    ldap: 30389  # LDAP NodePort (30000-32767 range)
+    api: 30555   # API NodePort (30000-32767 range)
+  
+  # Cloud environments: Uncomment for LoadBalancer
+  # type: LoadBalancer
+  # annotations:
+  #   service.beta.kubernetes.io/aws-load-balancer-type: "nlb"  # For AWS
+  #   service.beta.kubernetes.io/azure-load-balancer-internal: "false"  # For Azure
+  #   service.beta.kubernetes.io/gce-load-balancer-type: "External"  # For GCP
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
