@@ -8,9 +8,6 @@ keywords:
   - ldap
   - authentication
   - directory
-home: https://github.com/glauth/glauth
+home: https://github.com/hlebkanonik/glauth-helm-chart
 sources:
-  - https://github.com/glauth/glauth
-maintainers:
-  - name: GLAuth Team
-    email: support@glauth.com
+  - https://github.com/hlebkanonik/glauth-helm-chart

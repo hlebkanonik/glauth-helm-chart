@@ -1,0 +1,28 @@
+# Helm charts dependencies
+glauth/charts/
+
+# Chart packages
+*.tgz
+
+# Helm cache
+.helm/
+
+# Kubernetes secrets
+*.secret.yaml
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp 
