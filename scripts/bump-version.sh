@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to bump the chart version in Chart.yaml to current date (yy.m.d) - escaping leading zeros
+# Script to bump the chart version in Chart.yaml to current date (yy.m.d.hhmm) - escaping leading zeros
 # Usage: ./scripts/bump-version.sh [auto|manual]
 
 set -e
@@ -17,11 +17,13 @@ CURRENT_VERSION=$(grep "^version:" "$CHART_FILE" | awk '{print $2}')
 
 echo "Current version: $CURRENT_VERSION"
 
-# Generate new version based on current date (yy.m.d) - escaping leading zeros
+# Generate new version based on current date (yy.m.d.hhmm) - escaping leading zeros
 YEAR=$(date +%y)
 MONTH=$(date +%-m 2>/dev/null || date +%_m | tr -d ' ')
 DAY=$(date +%-d 2>/dev/null || date +%_d | tr -d ' ')
-NEW_VERSION="$YEAR.$MONTH.$DAY"
+HOUR=$(date +%-H 2>/dev/null || date +%_H | tr -d ' ')
+MINUTE=$(date +%-M 2>/dev/null || date +%_M | tr -d ' ')
+NEW_VERSION="$YEAR.$MONTH.$DAY.$HOUR$MINUTE"
 
 echo "New version (based on current date): $NEW_VERSION"
 
