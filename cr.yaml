@@ -1,9 +1,6 @@
 # Chart Releaser configuration file
 # This file configures the helm/chart-releaser-action
 
-# Chart directory - where to find the chart
-charts_dir: glauth
-
 # Chart repository URL - where to publish the chart
 charts_repo_url: https://hlebkanonik.github.io/glauth-helm-chart
 
