@@ -1,0 +1,47 @@
+1. GLAuth Configuration:
+   - LDAP Port: {{ .Values.service.ldapPort }}
+   - API Port: {{ .Values.service.apiPort }}
+
+2. In-Cluster Testing (from within Kubernetes):
+   LDAP: {{ include "glauth.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.ldapPort }}
+   API: {{ include "glauth.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.apiPort }}
+
+   Test from within the cluster:
+   kubectl run ldap-test --image=openldap:2.4 --rm -it --restart=Never -- \
+     ldapsearch -H ldap://{{ include "glauth.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.ldapPort }} \
+     -D "cn=tesla,dc=example,dc=com" -w password -b "dc=example,dc=com" "(objectClass=*)"
+
+3. NodePort Testing (external access):
+{{- if contains "NodePort" .Values.service.type }}
+   export NODE_PORT_LDAP=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "glauth.fullname" . }})
+   export NODE_PORT_API=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[1].nodePort}" services {{ include "glauth.fullname" . }})
+   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+   echo "LDAP endpoint: $NODE_IP:$NODE_PORT_LDAP"
+   echo "API endpoint: $NODE_IP:$NODE_PORT_API"
+
+   Test LDAP connection:
+   ldapsearch -H ldap://$NODE_IP:$NODE_PORT_LDAP \
+     -D "cn=tesla,dc=example,dc=com" \
+     -w password \
+     -b "dc=example,dc=com" \
+     "(objectClass=*)"
+
+   Test API:
+   curl http://$NODE_IP:$NODE_PORT_API/api/v1/version
+{{- else if contains "LoadBalancer" .Values.service.type }}
+   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+         You can watch the status by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "glauth.fullname" . }}'
+   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "glauth.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+   echo "LDAP endpoint: $SERVICE_IP:{{ .Values.service.ldapPort }}"
+   echo "API endpoint: $SERVICE_IP:{{ .Values.service.apiPort }}"
+{{- else if contains "ClusterIP" .Values.service.type }}
+   Use port-forward for external access:
+   kubectl port-forward svc/{{ include "glauth.fullname" . }} {{ .Values.service.ldapPort }}:{{ .Values.service.ldapPort }} {{ .Values.service.apiPort }}:{{ .Values.service.apiPort }}
+{{- end }}
+
+4. Port Forwarding (alternative for testing):
+   kubectl port-forward svc/{{ include "glauth.fullname" . }} {{ .Values.service.ldapPort }}:{{ .Values.service.ldapPort }} {{ .Values.service.apiPort }}:{{ .Values.service.apiPort }}
+   
+   Then in another terminal:
+   ldapsearch -H ldap://localhost:{{ .Values.service.ldapPort }} -D "cn=tesla,dc=example,dc=com" -w password -b "dc=example,dc=com" "(objectClass=*)"
+   curl http://localhost:{{ .Values.service.apiPort }}/api/v1/version
