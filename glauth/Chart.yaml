@@ -2,7 +2,7 @@ apiVersion: v2
 name: glauth
 description: A Helm chart for GLAuth LDAP server
 type: application
-version: 25.08.06
+version: 25.8.6
 appVersion: "2.3.2"
 keywords:
   - ldap
