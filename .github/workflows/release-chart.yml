@@ -24,6 +24,11 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Validate Chart
+        run: |
+          helm lint glauth/
+          helm template glauth/ > /dev/null
+
       - name: Bump Chart Version
         run: |
           chmod +x scripts/bump-version.sh
@@ -33,6 +38,10 @@ jobs:
         run: |
           git add glauth/Chart.yaml
           git commit -m "Bump chart version to $(date +%y.%m.%d) [skip ci]" || echo "No changes to commit"
+
+      - name: Push Version Bump
+        run: |
+          git push origin HEAD:${{ github.ref }}
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
