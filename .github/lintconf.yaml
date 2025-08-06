@@ -3,18 +3,14 @@
 
 # Rules to disable
 rules:
-  # Disable maintainer validation for testing charts
-  maintainer: false
-  
-  # Disable version increment check for testing
-  version: false
-  
-  # Allow missing values.yaml
-  missing-values-file: false
-  
-  # Allow missing README
-  missing-readme: false
-
-# Additional values files to test
-additional-values-files:
-  - values-reportportal.yaml 
+    # Disable maintainer validation for testing charts
+    maintainer: false
+    
+    # Disable version increment check for testing
+    version: false
+    
+    # Allow missing values.yaml
+    missing-values-file: false
+    
+    # Allow missing README
+    missing-readme: false

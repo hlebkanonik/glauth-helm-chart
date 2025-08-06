@@ -5,10 +5,6 @@
 chart-dirs:
   - glauth/
 
-# Chart repositories to add (if needed)
-# chart-repos:
-#   - glauth=https://glauth.github.io/helm-charts
-
 # Validate maintainers field (disabled for testing charts)
 validate-maintainers: false
 
@@ -20,7 +16,3 @@ lint-conf: .github/lintconf.yaml
 
 # Target branch for version increment check
 target-branch: main
-
-# Additional values files to test
-additional-values-files:
-  - values-reportportal.yaml 
